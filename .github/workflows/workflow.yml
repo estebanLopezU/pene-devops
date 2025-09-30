@@ -4,4 +4,4 @@ jobs:
   hello_word:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello word"
+      - run: python3 --version
