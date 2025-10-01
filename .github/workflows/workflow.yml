@@ -1,5 +1,5 @@
 name: hello world
-on: [workflow_dispatch]
+on: [push]
 
 jobs:
   hello_word:
@@ -10,7 +10,7 @@ jobs:
 
       - name: Crear clave ssh
         env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KEY: ${{ secrets.SECRET }}
         run: |
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
@@ -20,6 +20,6 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.SECRET }}
           port: 22
           script: ls -la
