@@ -4,4 +4,6 @@ jobs:
   hello_word:
     runs-on: ubuntu-latest
     steps:
-      - run: ping www.google.com
+    - name: clonar el repositorio
+      uses: actions/checkout@v3
+    - run: python3 main.py
