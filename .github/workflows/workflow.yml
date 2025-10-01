@@ -1,16 +1,25 @@
 name: hello world
 on: [workflow_dispatch]
+
 jobs:
   hello_word:
     runs-on: ubuntu-latest
     steps:
-    - name: clonar el repositorio
-      uses: actions/checkout@v3
-    - run: crear clasve ssh
-      env:
-        ssh_key: $ {{secrets.SSH_KEY}}
-       run:
-        echo "$ssh_key" > key.pem
-        cmod 600 hey.pem
-    - run: ls -la
-    - run: cat key.pem
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Crear clave ssh
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+
+      - name: Conexión SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: ls -la
