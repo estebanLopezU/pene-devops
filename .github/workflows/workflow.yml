@@ -1,18 +1,39 @@
-name: hello world
+name: build image
+
 on:
   push:
-    branches: [unitest]
+    branches: [example]
 
 jobs:
-  hello_word:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
 
-      - uses: action/setup-python@v4
-        with:
-          python.version: '3.10'
-      - run: pip install -r requirements.txt
+  runs-on: ubuntu-latest
 
-      - run: python main_test.py
+  steps:
+
+    - name: checkout
+      uses: actions/checkout@v5
+
+    - name: configurar python
+      uses: actions/setup-python@v5
+      with:
+        python-versions: '3.10'
+    
+    - name: instalar dependencias
+      run: pip install flask
+    
+    - name: ejecutar las pruebas unitarias
+       run: python test.py
+
+    - name: login a Github Packages
+      uses: docker//login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+      
+    - name: construir y publicar imagen
+      uses: docker/build-push-action@v4
+      with:
+        context:
+        push: true
+        tags: ghcr.io/${{github.repository_ower}}/python_app:latest
